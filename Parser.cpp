@@ -1,11 +1,8 @@
 #include "stdafx.h"
 
-void Parser::parseFile(string file, vector<Element> & arrayElements)
+Element *Parser::parseFile(string file)
 {
-	// cleaning array
-	arrayElements.clear();
-	arrayElements.shrink_to_fit();
-
+	root = new Element(emptyElement);
 	int counter = 0;
 	while ( (counter != (int)file.size()) || (this->state != DETECT_TYPE) ) {
 		// set chars
@@ -17,7 +14,7 @@ void Parser::parseFile(string file, vector<Element> & arrayElements)
 		// work
 		switch (state) {
 		case INITIALIZATION:
-			this->doInitialization(arrayElements);
+			this->doInitialization(this->root);
 			break;
 		case DETECT_TYPE:
 			this->doDetectType();
@@ -42,26 +39,25 @@ void Parser::parseFile(string file, vector<Element> & arrayElements)
 			this->doFormPair();
 			break;
 		case FORM_ELEMENT:
-			this->doFormElement(arrayElements);
+			this->doFormElement();
 			break;
 		}
 	}
+	return this->root;
 }
 
-void Parser::doInitialization(vector<Element> & arrayElements)
+void Parser::doInitialization(Element * root)
 {
-	//add root 
-	arrayElements.push_back(emptyElement);
-	(*(arrayElements.begin())).setType(this->typeBuffer);
-	(*(arrayElements.begin())).setContent(this->contentBuffer);
-	(*(arrayElements.begin())).setRootElement();
-	//switch state
+	// add root 
+	root->setRootElement();
+	fatherPointer = root->getThisPointer();	
+	// switch state
 	this->state = DETECT_TYPE;
 }
 
 void Parser::doDetectType()
 {
-	//detect type & switch state
+	// detect type & switch state
 	if (this->currentChar == '\'') {
 		if (this->formPair) {
 			this->state = WRITE_VALUE;
@@ -87,7 +83,7 @@ void Parser::doDetectType()
 	}
 	if (this->currentChar == ')')
 		this->state = CLOSE_BLOCK;
-	//clear content
+	// clear content
 	this->contentBuffer = "";
 }
 
@@ -111,14 +107,13 @@ void Parser::doCloseBlock()
 void Parser::doFormPair()
 {}
 
-void Parser::doFormElement(vector<Element> & arrayElements)
+void Parser::doFormElement()
 {
-	//form element
-	arrayElements.push_back(emptyElement);
-	currentPointer++;
-	(*(arrayElements.begin() + currentPointer)).setType(this->typeBuffer);
-	(*(arrayElements.begin() + currentPointer)).setContent(this->contentBuffer);
-	(*(arrayElements.begin() + fatherPointer)).addChildElement(&(*(arrayElements.begin() + currentPointer)));
-	//switch state
+	// form element
+	emptyElement.setType(this->typeBuffer);
+	emptyElement.setContent(this->contentBuffer);
+	// form struct
+	fatherPointer->addChildElement(new Element(emptyElement));
+	// switch state
 	this->state = DETECT_TYPE;
 }

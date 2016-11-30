@@ -16,7 +16,7 @@ class Element
 {
 private:
 	Element *rootElement;
-	vector<Element *> childElements;
+	vector<Element *> childElements;	
 	Type type;
 	string content;
 	void showElement(Element *element);
@@ -27,6 +27,7 @@ public:
 	void setRootElement();
 	void setType(Type newType);
 	void setContent(string newContent);
+	Element * getThisPointer();
 	void addChildElement(Element *child);
 	void showCurentElement();
 	void showFather();

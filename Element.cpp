@@ -32,6 +32,11 @@ void Element::setContent(string newContent)
 	this->content = newContent;
 }
 
+Element * Element::getThisPointer()
+{
+	return this;
+}
+
 void Element::addChildElement(Element *child)
 {
 	child->rootElement = this;
@@ -45,8 +50,8 @@ void Element::showCurentElement()
 
 void Element::showFather()
 {
-	if ( (this->rootElement == NULL) || (this->type == ROOT) )
-		cout << "It is a ROOT element!" << endl;		
+	if ((this->rootElement == NULL) /*|| (this->type == ROOT)*/)
+		cout << "It is a ROOT element!" << endl;
 	else
 		showElement(this->rootElement);
 }

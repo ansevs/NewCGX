@@ -10,23 +10,23 @@ private:
 	char currentChar;
 	char nextChar;
 	State state;
+	Element * root;
 	Element emptyElement;
+	Element *fatherPointer;
 	Type typeBuffer;
 	string contentBuffer;
 	bool formPair;
-	int currentPointer;
-	int fatherPointer;
 
 	//each state functions
-	void doInitialization(vector<Element> & arrayElements);
+	void doInitialization(Element * root);
 	void doDetectType();
 	void doWriteKey();
 	void doWriteValue();
 	void doOpenBlock();
 	void doCloseBlock();
 	void doFormPair();
-	void doFormElement(vector<Element> & arrayElements);
+	void doFormElement();
 public:
-	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), formPair(false), currentPointer(0), fatherPointer(0) {}
-	void parseFile(string file, vector<Element> & arrayElements);
+	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), formPair(false) {}
+	Element *parseFile(string file);
 };

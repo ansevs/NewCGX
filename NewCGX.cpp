@@ -35,10 +35,12 @@ int main()
 
 	// parser work
 	Parser parser;
-	vector<Element> arrayElements;
 
-	parser.parseFile(pureFile, arrayElements);
-	
+	Element *root(parser.parseFile(pureFile));
+	root->showChildren();
+
+
+
 	return 0;
 }
 

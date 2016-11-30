@@ -45,3 +45,13 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+Debug/Element.obj
+*.obj
+Debug/NewCGX.log
+*.pch
+*.tlog
+NewCGX.vcxproj.filters
+NewCGX.vcxproj.user
+NewCGX.vcxproj
+Debug/vc140.idb
+Debug/vc140.pdb
