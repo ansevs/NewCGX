@@ -36,10 +36,9 @@ int main()
 	// parser work
 	Parser parser;
 
-	Element *root(parser.parseFile(pureFile));
+	shared_ptr<Element> root(new Element());
+	root = parser.parseFile(pureFile);
 	root->showChildren();
-
-
 
 	return 0;
 }

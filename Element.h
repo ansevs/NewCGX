@@ -7,6 +7,7 @@
 #include <sstream>
 #include <vector>
 #include <cctype>
+#include <memory>
 
 using namespace std;
 
@@ -24,6 +25,7 @@ public:
 	Element() : type(DEFAULT), content("") {}
 	Element(Type elementType, string elementContent) : type(elementType), content(elementContent) {}
 	Element(const Element & element);
+	~Element() { cout << "DESTR" << endl; }
 	void setRootElement();
 	void setType(Type newType);
 	void setContent(string newContent);

@@ -1,8 +1,8 @@
 #include "stdafx.h"
 
-Element *Parser::parseFile(string file)
+shared_ptr<Element> Parser::parseFile(string file)
 {
-	root = new Element(emptyElement);
+	shared_ptr<Element> root(new Element(emptyElement));
 	int counter = 0;
 	while ( (counter != (int)file.size()) || (this->state != DETECT_TYPE) ) {
 		// set chars
@@ -14,7 +14,7 @@ Element *Parser::parseFile(string file)
 		// work
 		switch (state) {
 		case INITIALIZATION:
-			this->doInitialization(this->root);
+			this->doInitialization(root);
 			break;
 		case DETECT_TYPE:
 			this->doDetectType();
@@ -43,14 +43,14 @@ Element *Parser::parseFile(string file)
 			break;
 		}
 	}
-	return this->root;
+	return root;
 }
 
-void Parser::doInitialization(Element * root)
+void Parser::doInitialization(shared_ptr<Element> root)
 {
 	// add root 
 	root->setRootElement();
-	fatherPointer = root->getThisPointer();	
+	fatherPointer = root;	
 	// switch state
 	this->state = DETECT_TYPE;
 }
