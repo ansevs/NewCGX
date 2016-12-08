@@ -2,7 +2,7 @@
 
 #include "stdafx.h"
 
-enum State { INITIALIZATION, DETECT_TYPE, WRITE_KEY, WRITE_VALUE, OPEN_BLOCK, CLOSE_BLOCK, FORM_PAIR, FORM_ELEMENT };
+enum State { INITIALIZATION, DETECT_TYPE, WRITE_KEY, WRITE_VALUE, OPEN_BLOCK, CLOSE_BLOCK, ENABLE_PAIR, FORM_ELEMENT };
 
 class Parser
 {
@@ -11,21 +11,21 @@ private:
 	char nextChar;
 	State state;
 	Element emptyElement;
-	shared_ptr<Element> fatherPointer;
+	Element *fatherPointer;
 	Type typeBuffer;
 	string contentBuffer;
-	bool formPair;
-
-	//each state functions
-	void doInitialization(shared_ptr<Element> root);
+	bool itPair;
+	bool inQuotes;
+	// functions for each state 
+	void doInitialization(Element *root);
 	void doDetectType();
 	void doWriteKey();
 	void doWriteValue();
 	void doOpenBlock();
 	void doCloseBlock();
-	void doFormPair();
+	void doEnablePair();
 	void doFormElement();
 public:
-	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), formPair(false) {}
-	shared_ptr<Element> parseFile(string file);
+	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), itPair(false), inQuotes(false) {}
+	void parseFile(string file, Element &root);
 };

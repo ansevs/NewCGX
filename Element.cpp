@@ -4,7 +4,25 @@
 void Element::showElement(Element *element)
 {
 	cout << "Info: " << endl;
-	cout << "TYPE: " << (int)element->type << endl;
+	cout << "TYPE: ";
+	switch (element->type)
+	{
+	case DEFAULT:
+		cout << "DEFAULT" << endl;
+		break;
+	case ROOT:
+		cout << "ROOT" << endl;
+		break;
+	case KEY:
+		cout << "KEY" << endl;
+		break;
+	case VALUE:
+		cout << "VALUE" << endl;
+		break;
+	case BLOCK:
+		cout << "BLOCK" << endl;
+		break;
+	}
 	cout << "CONTENT: " << element->content << endl;
 	cout << "--------------------" << endl;
 }
@@ -32,15 +50,53 @@ void Element::setContent(string newContent)
 	this->content = newContent;
 }
 
-Element * Element::getThisPointer()
+void Element::addContent(string addedContent)
 {
-	return this;
+	this->content += addedContent;
 }
 
 void Element::addChildElement(Element *child)
 {
 	child->rootElement = this;
 	this->childElements.push_back(child);
+}
+
+Type Element::getType()
+{
+	return this->type;
+}
+
+string Element::getContent()
+{
+	return this->content;
+}
+
+Element *Element::getFather()
+{
+	return this->rootElement;
+}
+
+int Element::getChildrenQuantity()
+{
+	return this->childElements.size();
+}
+
+Element *Element::getChild(int num)
+{
+	list<Element *>::iterator iter;
+	iter = this->childElements.begin();
+	if (num < this->childElements.size()) {
+		advance(iter, num);
+		return *iter;
+	} else {
+		cout << "NUM > SIZE. First child is returned." << endl;
+		return this->childElements.front();
+	}
+}
+
+Element *Element::getLastChild()
+{
+	return this->childElements.back();
 }
 
 void Element::showCurentElement()
@@ -59,7 +115,7 @@ void Element::showFather()
 void Element::showChildren()
 {
 	if (this->childElements.size() != 0) {
-		vector<Element *>::iterator it;
+		list<Element *>::iterator it;
 		for (it = this->childElements.begin(); it != this->childElements.end(); it++)
 			showElement(*it);
 	}
@@ -72,7 +128,6 @@ void Element::clear()
 {
 	this->rootElement = NULL;
 	this->childElements.clear();
-	this->childElements.shrink_to_fit();
 	this->type = DEFAULT;
 	this->content = "";
 }
@@ -81,19 +136,26 @@ void Element::erase()
 {
 	// find this element like child and erase
 	int counter = 0;
-	vector<Element *>::iterator itChild;
+	list<Element *>::iterator itChild;
 	for (itChild = rootElement->childElements.begin(); itChild != rootElement->childElements.end(); itChild++) {
 		if ((*itChild) == this)
 			break;
 		counter++;
 	}
-	rootElement->childElements.erase(rootElement->childElements.begin() + counter);
+	list<Element *>::iterator iter1;
+	iter1 = rootElement->childElements.begin();
+	advance(iter1, counter);
+	rootElement->childElements.erase(iter1);
 
 	// pointers redistribution
-	vector<Element *>::iterator it;
+	list<Element *>::iterator it;
 	for (it = this->childElements.begin(); it != this->childElements.end(); it++) {
 		(*it)->rootElement = this->rootElement;
-		rootElement->childElements.insert(rootElement->childElements.begin() + counter, *it);
+
+		list<Element *>::iterator iter;
+		iter = rootElement->childElements.begin();
+		advance(iter, counter);
+		rootElement->childElements.insert(iter, *it);		
 		counter++;
 	}
 }
