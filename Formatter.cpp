@@ -18,10 +18,12 @@ void Formatter::formatting(Element *root)
 	for (int i = 0; i < root->getChildrenQuantity(); i++) {
 		currentContent = root->getChild(i)->getContent();
 		currentType = root->getChild(i)->getType();
+		// set next element
 		if (i == root->getChildrenQuantity() - 1)
 			nextElementType = DEFAULT;
 		else
 			nextElementType = root->getChild(i + 1)->getType();
+		// set prev element
 		if (i == 0)
 			prevElementType = DEFAULT;
 		else

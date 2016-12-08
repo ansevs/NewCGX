@@ -49,7 +49,7 @@ void Parser::doInitialization(Element *root)
 {
 	// add root 
 	root->setRootElement();
-	fatherPointer = root;
+	this->fatherPointer = root;
 	// switch state
 	this->state = DETECT_TYPE;
 }
@@ -89,10 +89,10 @@ void Parser::doWriteKey()
 {
 	this->contentBuffer.push_back(currentChar);
 	// enable inQuotes
-	if (contentBuffer.front() == '\'' && contentBuffer.size() == 1)
+	if (this->contentBuffer.front() == '\'' && this->contentBuffer.size() == 1)
 		this->inQuotes = true;
 	// disable inQuotes
-	if (contentBuffer.back() == '\'' && contentBuffer.size() != 1) {
+	if (this->contentBuffer.back() == '\'' && this->contentBuffer.size() != 1) {
 		this->inQuotes = false;
 		this->state = FORM_ELEMENT;
 	}
@@ -110,7 +110,7 @@ void Parser::doWriteValue()
 {
 	this->contentBuffer.push_back(currentChar);
 	// enable inQuotes
-	if (contentBuffer.front() == '\'' && contentBuffer.size() == 1)
+	if (this->contentBuffer.front() == '\'' && this->contentBuffer.size() == 1)
 		this->inQuotes = true;
 	// switch state
 	if ( ((this->currentChar == '\'') && (this->contentBuffer.size() != 1) && (this->nextChar != ';')) 
@@ -119,7 +119,7 @@ void Parser::doWriteValue()
 		this->state = FORM_ELEMENT;
 	}
 	// disable inQuotes
-	if (contentBuffer.back() == '\'' && contentBuffer.size() != 1)
+	if (this->contentBuffer.back() == '\'' && this->contentBuffer.size() != 1)
 		this->inQuotes = false;
 	// disable pair
 	this->itPair = false;
@@ -132,12 +132,12 @@ void Parser::doOpenBlock()
 		this->itPair = false;
 	// form block
 	this->contentBuffer.push_back(currentChar);
-	emptyElement.setType(this->typeBuffer);
-	emptyElement.setContent(this->contentBuffer);
+	this->emptyElement.setType(this->typeBuffer);
+	this->emptyElement.setContent(this->contentBuffer);
 	// form struct
-	fatherPointer->addChildElement(new Element(emptyElement));
+	this->fatherPointer->addChildElement(new Element(emptyElement));
 	// change father
-	fatherPointer = fatherPointer->getLastChild();
+	this->fatherPointer = fatherPointer->getLastChild();
 	// switch state
 	this->state = DETECT_TYPE;
 }
@@ -153,7 +153,7 @@ void Parser::doCloseBlock()
 		fatherPointer->addContent(this->contentBuffer);
 	}
 	// change father
-	fatherPointer = fatherPointer->getFather();
+	this->fatherPointer = fatherPointer->getFather();
 	// switch state
 	this->state = DETECT_TYPE;
 }
@@ -162,7 +162,7 @@ void Parser::doEnablePair()
 {
 	// add content
 	this->contentBuffer.push_back(currentChar);
-	fatherPointer->getLastChild()->addContent(this->contentBuffer);
+	this->fatherPointer->getLastChild()->addContent(this->contentBuffer);
 	// switch state
 	this->state = DETECT_TYPE;
 }
@@ -170,10 +170,10 @@ void Parser::doEnablePair()
 void Parser::doFormElement()
 {
 	// form element
-	emptyElement.setType(this->typeBuffer);
-	emptyElement.setContent(this->contentBuffer);
+	this->emptyElement.setType(this->typeBuffer);
+	this->emptyElement.setContent(this->contentBuffer);
 	// form struct
-	fatherPointer->addChildElement(new Element(emptyElement));
+	this->fatherPointer->addChildElement(new Element(emptyElement));
 	// switch state
 	this->state = DETECT_TYPE;
 }

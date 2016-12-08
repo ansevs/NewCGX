@@ -20,7 +20,6 @@ private:
 	list<Element *> childElements;	
 	Type type;
 	string content;
-	void showElement(Element *element);
 public:
 	Element() : type(DEFAULT), content("") {}
 	Element(Type elementType, string elementContent) : type(elementType), content(elementContent) {}
@@ -36,9 +35,4 @@ public:
 	int getChildrenQuantity();
 	Element *getChild(int num);
 	Element *getLastChild();
-	void showCurentElement();
-	void showFather();
-	void showChildren();
-	void clear();
-	void erase();
 };

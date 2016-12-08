@@ -7,7 +7,6 @@ class Formatter
 private:
 	int tabCounter;
 	Element *fatherPointer;
-
 	void indent(int tabCount);
 	void formatting(Element *father);
 public:
