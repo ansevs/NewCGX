@@ -82,10 +82,8 @@ void Formatter::formatting(Element *root)
 	}
 }
 
-void Formatter::printFormattedFile(Element &root)
+void Formatter::printFormattedText(Element &root)
 {
-	// set father
-	this->fatherPointer = &root;
 	// formatting
-	this->formatting(fatherPointer);
+	this->formatting(&root);
 }

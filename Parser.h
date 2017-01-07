@@ -7,8 +7,6 @@ enum State { INITIALIZATION, DETECT_TYPE, WRITE_KEY, WRITE_VALUE, OPEN_BLOCK, CL
 class Parser
 {
 private:
-	char currentChar;
-	char nextChar;
 	State state;
 	Element emptyElement;
 	Element *fatherPointer;
@@ -16,16 +14,20 @@ private:
 	string contentBuffer;
 	bool itPair;
 	bool inQuotes;
+	bool sign;
 	// functions for each state 
-	void doInitialization(Element *root);
-	void doDetectType();
-	void doWriteKey();
-	void doWriteValue();
-	void doOpenBlock();
-	void doCloseBlock();
-	void doEnablePair();
-	void doFormElement();
+	bool doInitialization(Element * root);
+	bool doDetectType(char currentChar);
+	bool doWriteKey(char currentChar);
+	bool doWriteValue(char currentChar);
+	bool doOpenBlock(char currentChar);
+	bool doCloseBlock(char currentChar);
+	bool doEnablePair(char currentChar);
+	bool doFormElement(char currentChar);
+	// other functions
+	bool parsing(char currentChar, Element & root);
+	bool formInput(char inputChar);
 public:
-	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), itPair(false), inQuotes(false) {}
-	void parseFile(string file, Element &root);
+	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), itPair(false), inQuotes(false), sign(false) {}
+	void parse(char inputChar, Element &root);
 };

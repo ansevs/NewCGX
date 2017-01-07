@@ -6,10 +6,9 @@ class Formatter
 {
 private:
 	int tabCounter;
-	Element *fatherPointer;
 	void indent(int tabCount);
-	void formatting(Element *father);
+	void formatting(Element *root);
 public:
 	Formatter() : tabCounter(0) {}
-	void printFormattedFile(Element &root);
+	void printFormattedText(Element &root);
 };
