@@ -2,32 +2,33 @@
 
 #include "stdafx.h"
 
-enum State { INITIALIZATION, DETECT_TYPE, WRITE_KEY, WRITE_VALUE, OPEN_BLOCK, CLOSE_BLOCK, ENABLE_PAIR, FORM_ELEMENT };
+enum State { INITIALIZATION, DETECT_TYPE, WRITE_KEY, WRITE_VALUE, WRITE_SIGN, FORM_ELEMENT };
 
 class Parser
 {
 private:
 	State state;
-	Element emptyElement;
-	Element *fatherPointer;
 	Type typeBuffer;
 	string contentBuffer;
+	int currentLevel;
+	Element container;
 	bool itPair;
 	bool inQuotes;
 	bool sign;
-	// functions for each state 
-	bool doInitialization(Element * root);
+	bool formed;
+	// functions for each state
+	bool doInitialization();
 	bool doDetectType(char currentChar);
 	bool doWriteKey(char currentChar);
 	bool doWriteValue(char currentChar);
-	bool doOpenBlock(char currentChar);
-	bool doCloseBlock(char currentChar);
-	bool doEnablePair(char currentChar);
+	bool doWriteSign(char currentChar);
 	bool doFormElement(char currentChar);
 	// other functions
-	bool parsing(char currentChar, Element & root);
+	bool parsing(char currentChar);
 	bool formInput(char inputChar);
 public:
-	Parser() : state(INITIALIZATION), typeBuffer(DEFAULT), contentBuffer(""), itPair(false), inQuotes(false), sign(false) {}
-	void parse(char inputChar, Element &root);
+	Parser() : state(DETECT_TYPE), typeBuffer(DEFAULT), contentBuffer(""), currentLevel(0),
+		formed(false), itPair(false), inQuotes(false), sign(false) {}
+	bool formElement(char inputChar);		// return "true" if element is formed, else return "false"
+	Element getFormedElement();
 };

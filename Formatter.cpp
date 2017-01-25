@@ -7,83 +7,52 @@ void Formatter::indent(int tabCount)
 	}
 }
 
-void Formatter::formatting(Element *root)
+void Formatter::print(Element &container)
 {
-	// auxiliary variable
-	string currentContent = "";
-	Type currentType = DEFAULT;
-	Type nextElementType = DEFAULT;
-	Type prevElementType = DEFAULT;
-	// formatting & print
-	for (int i = 0; i < root->getChildrenQuantity(); i++) {
-		currentContent = root->getChild(i)->getContent();
-		currentType = root->getChild(i)->getType();
-		// set next element
-		if (i == root->getChildrenQuantity() - 1)
-			nextElementType = DEFAULT;
-		else
-			nextElementType = root->getChild(i + 1)->getType();
-		// set prev element
-		if (i == 0)
-			prevElementType = DEFAULT;
-		else
-			prevElementType = root->getChild(i - 1)->getType();
-		// print content (if element is not block)
-		if (currentType != BLOCK) {
-			// if pair
-			if (currentType == KEY && nextElementType == VALUE) {
-				this->indent(this->tabCounter);
-				cout << currentContent;
-			}
-			// if not pair
-			else {
-				if (!(prevElementType == KEY && currentType == VALUE))
-					this->indent(this->tabCounter);
-				cout << currentContent << endl;
-			}
-		}
-		// if element is block
-		else {
-			// if block is empty
-			if (root->getChild(i)->getChildrenQuantity() == 0) {
-				this->indent(this->tabCounter);
-				cout << currentContent.front() << endl;
-				if (currentContent.back() == ')') {
-					this->indent(this->tabCounter);
-					cout << currentContent.back() << endl;
-				}
-				else {
-					currentContent.erase(0,1);
-					this->indent(this->tabCounter);
-					cout << currentContent << endl;
-				}
-			}
-			// if block is not empty
-			else {
-				// open block
-				this->indent(this->tabCounter);
-				cout << currentContent.front() << endl;
-				this->tabCounter++;
-				// recursion
-				this->formatting(root->getChild(i));
-				// close block
-				this->tabCounter--;
-				if (currentContent.back() == ')') {
-					this->indent(this->tabCounter);
-					cout << currentContent.back() << endl;
-				}
-				else {
-					currentContent.erase(0,1);
-					this->indent(this->tabCounter);
-					cout << currentContent << endl;
-				}
-			}
-		}
-	}
+	if (this->prevElementType != DEFAULT)
+		cout << endl;
+	this->indent(container.getLevel());
+	cout << container.getContent();
 }
 
-void Formatter::printFormattedText(Element &root)
+void Formatter::formatAndPrint(Element &container)
 {
-	// formatting
-	this->formatting(&root);
+	// block rules
+	if (container.getType() == BLOCK) {
+		print(container);
+	}
+	// sign rules
+	if (container.getType() == SEMICOLON || container.getType() == EQUALLY) {
+		cout << container.getContent();
+	}
+	// key rules
+	if (container.getType() == KEY) {
+		print(container);
+	}
+	// value rules
+	if (container.getType() == VALUE) {
+		// special case
+		char specialChar = container.getContent().back();
+		if (specialChar == '(' || specialChar == ')')
+			container.popBackContent();
+		// common case
+		if (this->prevElementType == EQUALLY) {
+			cout << container.getContent();
+		} else {
+			print(container);
+		}
+		// special case end
+		if (specialChar == '(') {
+			cout << endl;
+			this->indent(container.getLevel());
+			cout << '(';
+		}
+		if (specialChar == ')') {
+			cout << endl;
+			this->indent(container.getLevel()-1);
+			cout << ')';
+		}
+	}
+	// save prevType
+	this->prevElementType = container.getType();
 }

@@ -11,28 +11,22 @@
 
 using namespace std;
 
-enum Type { DEFAULT, ROOT, KEY, VALUE, BLOCK };
+enum Type { DEFAULT, KEY, VALUE, BLOCK, SEMICOLON, EQUALLY };
 
 class Element
 {
 private:
-	Element *rootElement;
-	list<Element *> childElements;	
 	Type type;
 	string content;
+	int level;
 public:
-	Element() : type(DEFAULT), content("") {}
-	Element(Type elementType, string elementContent) : type(elementType), content(elementContent) {}
+	Element() : type(DEFAULT), content(""), level(0) {}
 	Element(const Element & element);
-	void setRootElement();
 	void setType(Type newType);
 	void setContent(string newContent);
-	void addContent(string addedContent);
-	void addChildElement(Element *child);
+	void popBackContent();
+	void setLevel(int newLevel);
 	Type getType();
 	string getContent();
-	Element *getFather();
-	int getChildrenQuantity();
-	Element *getChild(int num);
-	Element *getLastChild();
+	int getLevel();
 };

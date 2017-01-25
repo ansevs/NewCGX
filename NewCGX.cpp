@@ -17,8 +17,8 @@ int main()
 	N = stoi(input);
 
 	// init
-	Element root;
 	Parser parser;
+	Formatter formatter;
 
 	// start parsing
 	for (int i = 0; i < N; i++) {
@@ -26,16 +26,18 @@ int main()
 		while (cin.read(&currentChar, 1)) {
 			if (currentChar == '\n')
 				break;
-			parser.parse(currentChar, root);
+			if (parser.formElement(currentChar)) {
+				Element container = parser.getFormedElement();
+				formatter.formatAndPrint(container);
+			}
 		}
 	}
 	// end parsing
-	parser.parse('\0', root);
+	if (parser.formElement('\0')) {
+		Element container = parser.getFormedElement();
+		formatter.formatAndPrint(container);
+	}
 
-	// formatter work
-	Formatter form;
-	form.printFormattedText(root);
-	
 	return 1;
 }
 

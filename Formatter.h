@@ -5,10 +5,10 @@
 class Formatter
 {
 private:
-	int tabCounter;
+	Type prevElementType;
 	void indent(int tabCount);
-	void formatting(Element *root);
+	void print(Element &container);
 public:
-	Formatter() : tabCounter(0) {}
-	void printFormattedText(Element &root);
+	Formatter() : prevElementType(DEFAULT) {}
+	void formatAndPrint(Element &container);
 };

@@ -5,13 +5,7 @@ Element::Element(const Element & element)
 {
 	this->type = element.type;
 	this->content = element.content;
-}
-
-void Element::setRootElement()
-{
-	this->rootElement = NULL;
-	this->type = ROOT;
-	this->content = "ROOT element";
+	this->level = element.level;
 }
 
 void Element::setType(Type newType)
@@ -24,15 +18,14 @@ void Element::setContent(string newContent)
 	this->content = newContent;
 }
 
-void Element::addContent(string addedContent)
+void Element::popBackContent()
 {
-	this->content += addedContent;
+	this->content.pop_back();
 }
 
-void Element::addChildElement(Element *child)
+void Element::setLevel(int newLevel)
 {
-	child->rootElement = this;
-	this->childElements.push_back(child);
+	this->level = newLevel;
 }
 
 Type Element::getType()
@@ -45,30 +38,7 @@ string Element::getContent()
 	return this->content;
 }
 
-Element *Element::getFather()
+int Element::getLevel()
 {
-	return this->rootElement;
-}
-
-int Element::getChildrenQuantity()
-{
-	return this->childElements.size();
-}
-
-Element *Element::getChild(int num)
-{
-	list<Element *>::iterator iter;
-	iter = this->childElements.begin();
-	if (num < this->childElements.size()) {
-		advance(iter, num);
-		return *iter;
-	} else {
-		cout << "NUM > SIZE. First child is returned." << endl;
-		return this->childElements.front();
-	}
-}
-
-Element *Element::getLastChild()
-{
-	return this->childElements.back();
+	return this->level;
 }
